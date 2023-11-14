@@ -2,7 +2,7 @@ import os
 import tkinter as tk
 from tkinter import messagebox
 from whoosh.index import create_in
-from whoosh.fields import TEXT, ID, Schema, DATETIME
+from whoosh.fields import TEXT, ID, Schema, DATETIME, KEYWORD
 from whoosh.qparser import QueryParser
 from whoosh.query import Term
 from whoosh import qparser
@@ -14,7 +14,7 @@ correos = "Correos/"
 
 # Crear un esquema para indexar correos electrónicos
 schema = Schema(sender=ID(stored=True),
-                recipients=TEXT(stored=True),
+                recipients=KEYWORD(stored=True),
                 date=DATETIME(stored=True),
                 subject=TEXT(stored=True),
                 body=TEXT(stored=True))
@@ -26,6 +26,8 @@ email_index="email_index"
 if not os.path.exists(email_index):
     os.mkdir(email_index)
     index = create_in(email_index, schema)
+else:
+     index = open_dir(email_index,schema=schema)
 
 
 # Función para cargar correos electrónicos en el índice
